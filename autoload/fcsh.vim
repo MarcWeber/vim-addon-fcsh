@@ -118,7 +118,11 @@ fun! fcsh#CompileRHS()
   let ef= 
         \  '%f\(%l\)\:\ col\:\ %c\ %m'
   let ef = escape(ef, '"\')
-  let args = ["mxmlc", "-load-config+=build.xml", "-debug=true", "-incremental=true", "-benchmark=false"]
+  if expand('%:e') == 'mxml'
+    let args = ["mxmlc", expand('%')]
+  else
+    let args = ["mxmlc", "-load-config+=build.xml", "-debug=true", "-incremental=true", "-benchmark=false"]
+  end
   let args = eval(input('compilation args: ', string(args)))
   return  ['exec "set efm='.ef.'" ',"exec 'cfile '.fcsh#Compile(".string(args).")"]
 
