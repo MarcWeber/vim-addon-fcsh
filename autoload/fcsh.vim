@@ -112,3 +112,15 @@ PYTHONEOF
   " unlet g:fcsh_result
   return g:fcsh_result
 endf
+
+
+fun! fcsh#CompileRHS()
+  let ef= 
+        \  '%f\(%l\)\:\ col\:\ %c\ %m'
+  let ef = escape(ef, '"\')
+  let args = ["mxmlc", "-load-config+=build.xml", "-debug=true", "-incremental=true", "-benchmark=false"]
+  let args = eval(input('compilation args: ', string(args)))
+  return  ['exec "set efm='.ef.'" ',"exec 'cfile '.fcsh#Compile(".string(args).")"]
+
+  :call bg#RunQF(['haxe',".string(haxe#BuildHXMLPath())."], 'c', ".string(ef).")"
+endfun
