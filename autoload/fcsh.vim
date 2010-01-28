@@ -1,3 +1,6 @@
+exec scriptmanager#DefineAndBind('s:c','g:vim_addon_fcsh', '{}')
+let s:c['mxmlc_default_args'] = get(s:c,'mxmlc_default_args', ['--strict=true'])
+
 " author: Marc Weber <marco-oweber@gxm.de>
 
 " usage example:
@@ -117,11 +120,13 @@ endf
 fun! fcsh#CompileRHS()
   let ef= 
         \  '%f\(%l\)\:\ col\:\ %c\ %m'
+        \.',%f\(%l\)\:\ %m'
+        \.',%f\:\ %m'
   let ef = escape(ef, '"\')
-  if expand('%:e') == 'mxml'
-    let args = ["mxmlc", expand('%')]
+  if index(['mxml','as'], expand('%:e')) > 0
+    let args = ["mxmlc"] + s:c['mxmlc_default_args'] + [ expand('%')]
   else
-    let args = ["mxmlc", "-load-config+=build.xml", "-debug=true", "-incremental=true", "-benchmark=false"]
+    let args = ['mxmlc']
   end
   let args = eval(input('compilation args: ', string(args)))
   return  ['exec "set efm='.ef.'" ',"exec 'cfile '.fcsh#Compile(".string(args).")"]
