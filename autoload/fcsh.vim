@@ -123,13 +123,11 @@ fun! fcsh#CompileRHS()
         \.',%f\(%l\)\:\ %m'
         \.',%f\:\ %m'
   let ef = escape(ef, '"\')
-  if index(['mxml','as'], expand('%:e')) > 0
+  if index(['mxml','as'], expand('%:e')) >= 0
     let args = ["mxmlc"] + s:c['mxmlc_default_args'] + [ expand('%')]
   else
     let args = ['mxmlc']
   end
   let args = eval(input('compilation args: ', string(args)))
   return  ['exec "set efm='.ef.'" ',"exec 'cfile '.fcsh#Compile(".string(args).")"]
-
-  :call bg#RunQF(['haxe',".string(haxe#BuildHXMLPath())."], 'c', ".string(ef).")"
 endfun
