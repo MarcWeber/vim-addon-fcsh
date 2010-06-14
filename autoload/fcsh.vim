@@ -15,6 +15,9 @@ let s:c['mxmlc_default_args'] = get(s:c,'mxmlc_default_args', ['--strict=true'])
 " reused. All lines received from that process are written to the logfile
 " until the prompt (fcsh) is reached again
 
+" If you want to start hacking on this consider having a look at vim-addon-sbt
+" which has a similar implementation
+
 
 " alternatives
 " ============
@@ -81,7 +84,7 @@ if not globals().has_key('fcshCompiler'):
         return read
       else:
         s = read + self.fcsh_o.readline()
-        return s
+        return s[:-1]
 
     
     def waitForShell(self, out):
@@ -123,11 +126,12 @@ fun! fcsh#CompileRHS()
         \.',%f\(%l\)\:\ %m'
         \.',%f\:\ %m'
   let ef = escape(ef, '"\')
+  let target = '--target-player=10.0.0'
   if index(['mxml','as'], expand('%:e')) >= 0
-    let args = ["mxmlc"] + s:c['mxmlc_default_args'] + [ expand('%')]
+    let args = ["mxmlc"] + s:c['mxmlc_default_args'] + [target,  expand('%')]
   else
-    let args = ['mxmlc']
+    let args = ['mxmlc'] + target
   end
-  let args = eval(input('compilation args: ', string(args)))
+  let args = actions#ConfirmArgs(args,'mxmlc command line')
   return  ['exec "set efm='.ef.'" ',"exec 'cfile '.fcsh#Compile(".string(args).")"]
 endfun
