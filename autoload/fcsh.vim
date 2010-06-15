@@ -40,7 +40,7 @@ fun! fcsh#Compile(fcsh_command_list)
   endif
 
 python << PYTHONEOF
-import sys, tokenize, cStringIO, types, socket, string, vim, popen2, os, re
+import sys, tokenize, cStringIO, types, socket, string, os, re, vim
 from subprocess import Popen, PIPE
 
 if not globals().has_key('fcshCompiler'):
@@ -54,7 +54,13 @@ if not globals().has_key('fcshCompiler'):
       self.tmpFile = vim.eval("tempname()")
       self.ids = {}
       # errors are print to stderr. We want to catch them!
-      self.fcsh_o,self.fcsh_i,self.fcsh_e = popen2.popen3('fcsh 2>&1')
+      p = Popen(["fcsh"], \
+            shell = False, bufsize = 1, stdin = PIPE, stdout = PIPE, stderr = PIPE)
+
+      self.fcsh_o = p.stdout
+      self.fcsh_i = p.stdin
+
+
       self.waitForShell(None)
     
     def waitFor(self, pattern, out):
