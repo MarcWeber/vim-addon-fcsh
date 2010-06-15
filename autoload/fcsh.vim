@@ -41,7 +41,7 @@ fun! fcsh#Compile(fcsh_command_list)
 
 python << PYTHONEOF
 import sys, tokenize, cStringIO, types, socket, string, os, re, vim
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, STDOUT
 
 if not globals().has_key('fcshCompiler'):
 
@@ -55,7 +55,7 @@ if not globals().has_key('fcshCompiler'):
       self.ids = {}
       # errors are print to stderr. We want to catch them!
       p = Popen(["fcsh"], \
-            shell = False, bufsize = 1, stdin = PIPE, stdout = PIPE, stderr = PIPE)
+            shell = False, bufsize = 1, stdin = PIPE, stdout = PIPE, stderr = STDOUT)
 
       self.fcsh_o = p.stdout
       self.fcsh_i = p.stdin
@@ -127,10 +127,12 @@ endf
 
 
 fun! fcsh#CompileRHS()
-  let ef= 
-        \  '%f\(%l\)\:\ col\:\ %c\ %m'
-        \.',%f\(%l\)\:\ %m'
-        \.',%f\:\ %m'
+  let ef=
+       \ '%A%f\(%l\)\:\ col\:\ %c\ %m'
+       \.',%-Z%p^'
+       \.',%-C%.%#'
+       \.',%-GRecompile\:%.%#'
+       \.',%-GReason\:%.%#'
   let ef = escape(ef, '"\')
   let target = '--target-player=10.0.0'
   if index(['mxml','as'], expand('%:e')) >= 0
