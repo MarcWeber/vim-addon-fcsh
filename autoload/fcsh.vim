@@ -1,4 +1,4 @@
-exec scriptmanager#DefineAndBind('s:c','g:vim_addon_fcsh', '{}')
+exec vam#DefineAndBind('s:c','g:vim_addon_fcsh', '{}')
 let s:c['mxmlc_default_args'] = get(s:c,'mxmlc_default_args', ['--strict=true'])
 
 " author: Marc Weber <marco-oweber@gxm.de>
@@ -138,7 +138,7 @@ fun! fcsh#CompileRHS()
   if index(['mxml','as'], expand('%:e')) >= 0
     let args = ["mxmlc"] + s:c['mxmlc_default_args'] + [target,  expand('%')]
   else
-    let args = ['mxmlc'] + target
+    let args = ['mxmlc'] + [target]
   end
   let args = actions#ConfirmArgs(args,'mxmlc command line')
   return  ['exec "set efm='.ef.'" ',"exec 'cfile '.fcsh#Compile(".string(args).")"]
