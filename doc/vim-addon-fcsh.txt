@@ -1,0 +1,14 @@
+Note: alternatives:
+use this wrapper (it binds to TCP/IP port to talk to a daemon). You can use
+this mxmlc fcsh wrapper within makefiles.
+If it didn't exist I'd have it written today.
+http://flex-compiler-shell-daemon.googlecode.com/
+
+INSTALLATION
+==============
+There is not much to write here.
+
+Put this plugin in path, satisfy its dependency.
+
+Read the documentation of vim-addon-actions
+
